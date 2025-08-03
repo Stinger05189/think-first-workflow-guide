@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Think-First Workflow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111115;
+            --bg-card: #1a1a20;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #334155;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 11, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            padding: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 8rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 0.6s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        /* Principles Cards */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .principle-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .principle-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .principle-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .principle-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Tools Section */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 12px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .tool-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Workflow Steps */
+        .workflow-steps {
+            margin-top: 4rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 4rem;
+            width: 2px;
+            height: calc(100% + 1rem);
+            background: var(--border);
+        }
+
+        .step:last-child::before {
+            display: none;
+        }
+
+        .step-number {
+            width: 4rem;
+            height: 4rem;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: white;
+            flex-shrink: 0;
+            margin-right: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+        }
+
+        /* Quote Section */
+        .quote-section {
+            background: var(--bg-card);
+            padding: 4rem 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin: 4rem 0;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-section::before {
+            content: '"';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8rem;
+            color: var(--accent-primary);
+            opacity: 0.1;
+            font-family: serif;
+        }
+
+        .quote-section blockquote {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--text-primary);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 4rem 0 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            margin-bottom: 2rem;
+        }
+
+        .footer-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-content p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step::before {
+                display: none;
+            }
+            
+            .step-number {
+                margin: 0 auto 1rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        .cta-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap; /* Allows buttons to stack on smaller screens */
+        }
+
+        .cta-button.secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-primary);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Think-First Workflow</div>
+            <ul class="nav-links">
+                <li><a href="#principles">Principles</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#workflow">Workflow</a></li>
+                <li><a href="#context">Context</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>The Think-First Workflow</h1>
+                <p>A Guide to Building Ambitious Projects with AI</p>
+                <div class="cta-container">
+                    <a href="#principles" class="cta-button">Start Your Journey</a>
+                    <a href="#" id="download-md-button" class="cta-button secondary">Download as Markdown</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <p class="section-content">
+                    I want to share a workflow that has fundamentally changed how I approach complex projects. As someone who isn't a traditional code developer but has extensive experience in architecting and planning within Unreal Engine, this process has empowered me to build things I once thought were only possible with a future, fully autonomous AGI.
+                </p>
+                <p class="section-content">
+                    This guide is for those who are serious about their projects. It's a method that prioritizes deep, front-loaded thinking to enable non-coders to tackle projects of nearly any complexity. It's not a shortcut, but it is my current best-known approach to transforming a powerful AI into a precise and effective tool.
+                </p>
+            </div>
+        </section>
+
+        <section id="principles" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">Guiding Principles</h2>
+                <p class="section-content fade-in">Before diving into the steps, it's crucial to understand the philosophy that makes this process work.</p>
+                
+                <div class="principles-grid">
+                    <div class="principle-card fade-in">
+                        <h3>Front-Load the "Thinking"</h3>
+                        <p>The core strategy is to do almost all of the cognitive work—the planning, research, and architectural design—before a single line of code is written. You are creating an exhaustive blueprint that allows the AI to "do" rather than "think" during the implementation phase.</p>
+                    </div>
+                    <div class="principle-card fade-in">
+                        <h3>Documentation IS the Project</h3>
+                        <p>All planning, research, and architectural documents are saved directly within my project's source control. This treats the planning phase with the same importance as the final code, creating a holistic and well-documented project history.</p>
+                    </div>
+                    <div class="principle-card fade-in">
+                        <h3>Format for the AI</h3>
+                        <p>Since most documentation is for the AI's consumption, it must be structured for clarity. I use Markdown exclusively, with clearly labeled files, functions, and code snippets to remove any guesswork for the AI assistant.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">My Tools of Choice</h2>
+                
+                <div class="tools-grid">
+                    <div class="tool-card fade-in">
+                        <div class="tool-icon">G</div>
+                        <h3>Gemini (in Google AI Studio)</h3>
+                        <p>The engine for all my planning and research. Its ability to manage and synthesize vast contexts is unparalleled for the kind of deep work this workflow requires, especially with Unreal Engine C++.</p>
+                    </div>
+                    <div class="tool-card fade-in">
+                        <div class="tool-icon">R</div>
+                        <h3>Roo Code</h3>
+                        <p>Reserved for implementation when a project's complexity truly warrants an automated, multi-agent approach, especially during iterative coding cycles that follow the main planning phase.</p>
+                    </div>
+                    <div class="tool-card fade-in">
+                        <div class="tool-icon">C</div>
+                        <h3>Copy-Paste & Diff Method</h3>
+                        <p>My default workflow, offering absolute control. It hinges on a meticulous plan that directs the AI to produce clean code. I never blindly paste AI code; instead, I use a "Compare with Clipboard" feature in my editor. This shows the exact changes, allowing me to make final edits and ensure I am the final gatekeeper for all code entering my project.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">The Workflow: A Step-by-Step Guide</h2>
+                
+                <div class="workflow-steps">
+                    <div class="step fade-in">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>The Initial Spark</h3>
+                            <p>Create a low-effort, rough draft of your plan to establish a baseline understanding.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step fade-in">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Deep Dive</h3>
+                            <p>Write an exhaustive document explaining your vision in as much detail as possible to multiply the AI's capabilities.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step fade-in">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Laying the Groundwork</h3>
+                            <p>Provide the AI with relevant source code (from the engine, GitHub, etc.) and instruct it to produce a high-level research document summarizing the key systems.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step fade-in">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Refining the Research</h3>
+                            <p>Distill the AI's analysis into a focused V2 research document that will serve as a core reference.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step fade-in">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>The Blueprint (A Two-Draft Architectural Plan)</h3>
+                            <p>This is the most intensive planning stage, broken into four parts:</p>
+                            <ul style="list-style-position: inside; padding-left: 1rem; margin-top: 1rem; color: var(--text-secondary);">
+                                <li style="margin-bottom: 0.5rem;"><strong>Create Draft 1:</strong> Instruct the AI to build the first draft, leaving room for improvement.</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Request Improvement Plan:</strong> Have the AI generate a formal list of 5-10 potential improvements.</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Provide Human Feedback:</strong> Critically review every suggestion to correct the AI's course and second-guess your own assumptions.</li>
+                                <li><strong>Create Draft 2:</strong> Instruct the AI to generate the final architectural plan incorporating all of your feedback.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="step fade-in">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3>The Roadmap</h3>
+                            <p>With the final architecture complete, create one or more detailed, step-by-step implementation plans.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="context" class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">Managing Context: A Dialogue with Your AI</h2>
+                <p class="section-content fade-in">Your role in this workflow is to be the curator of the AI's attention. Understanding how to manage the conversation context is key to getting high-quality results.</p>
+                
+                <div class="principles-grid">
+                    <div class="principle-card fade-in">
+                        <h3>The 100k Token Rule of Thumb</h3>
+                        <p>For critical decision-making phases like creating the architectural plan (Phase 5), I try to keep the Gemini conversation context under 100,000 tokens. When the context grows too large, the AI's attention can become stretched, leading to less consistent output.</p>
+                    </div>
+                    <div class="principle-card fade-in">
+                        <h3>Embrace Large Context for Research</h3>
+                        <p>During the research phases (Phase 1-3), this limit doesn't apply. Feeding Gemini vast amounts of source code (even 400k-600k tokens) is perfectly fine, as you are leveraging its core strength in synthesizing broad information.</p>
+                    </div>
+                    <div class="principle-card fade-in">
+                        <h3>Strategic Conversation Management</h3>
+                        <p>Structure your conversations deliberately:</p>
+                        <ul style="list-style-position: inside; padding-left: 1rem; margin-top: 1rem; color: var(--text-secondary);">
+                            <li style="margin-bottom: 0.5rem;"><strong>For most projects:</strong> Go from Phase 1 to 5 in one continuous chat if the context is manageable.</li>
+                            <li style="margin-bottom: 0.5rem;"><strong>For large projects:</strong> Compile research, then start a new, clean conversation for the architectural plan to avoid high token counts.</li>
+                            <li><strong>For implementation:</strong> Always start a fresh conversation for Phase 6, providing only the final architecture and necessary files.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="quote-section fade-in">
+                    <blockquote>
+                        "This workflow is a testament to the power of human-AI collaboration. As AI becomes more capable, our role will increasingly shift from implementation to orchestration. Even with true AGI, the responsibility of deciding what to build and why will remain ours. We are, and will continue to be, the architects of the vision."
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">The Payoff: Deciding How to "Do"</h2>
+                <p class="section-content fade-in">With your plans complete, you must decide if the AI still needs to "think."</p>
+                
+                <div class="principles-grid">
+                    <div class="principle-card fade-in">
+                        <h3>If NO Thinking is Required</h3>
+                        <p>Your plan is a checklist. You can use a cost-effective orchestrator in Roo Code to simply execute the steps.</p>
+                    </div>
+                    <div class="principle-card fade-in">
+                        <h3>If YES Thinking is Required</h3>
+                        <p>Your plan needs minor problem-solving during implementation. A capable "thinking" model should act as orchestrator. While Gemini is excellent, models specifically tuned for agentic coding (like Horizon models) can be very effective. Their strength is less in top-tier "thinking" and more in correctly passing context to sub-tasks, ensuring the plan is followed with precision.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3>Our Evolving Role</h3>
+                <p>This workflow is a testament to the power of human-AI collaboration. As AI becomes more capable, our role will increasingly shift from implementation to orchestration.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Think-First Workflow. Empowering human-AI collaboration.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Allow default for empty or invalid hashes
+                const href = this.getAttribute('href') || '';
+                if (href === '#' || href.trim() === '') {
+                    return; // do nothing; avoid querySelector('#') which is invalid
+                }
+
+                e.preventDefault();
+                let target = null;
+                try {
+                    target = document.querySelector(href);
+                } catch (err) {
+                    // In case of any malformed selector, bail out gracefully
+                    return;
+                }
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header scroll effect
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(10, 10, 11, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 10, 11, 0.8)';
+            }
+        });
+
+        // Add subtle parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        });
+    </script>
+    <script>
+        // --- Add this new script block ---
+
+        function generateMarkdown() {
+            let markdownContent = '';
+
+            // Function to append text with proper newlines
+            const append = (text, prefix = '', suffix = '\n\n') => {
+                if (text && text.trim()) {
+                    markdownContent += `${prefix}${text.trim()}${suffix}`;
+                }
+            };
+
+            // Title and Subtitle
+            append(document.querySelector('.hero h1').textContent, '# ');
+            append(document.querySelector('.hero p').textContent, '> ');
+
+            // Introduction
+            document.querySelectorAll('.section .section-content').forEach(p => {
+                if (p.closest('.hero') === null) { // Exclude hero paragraph
+                    append(p.textContent);
+                }
+            });
+
+            // Principles
+            append(document.querySelector('#principles .section-title').textContent, '## ');
+            document.querySelectorAll('#principles .principle-card').forEach(card => {
+                append(card.querySelector('h3').textContent, '### ');
+                append(card.querySelector('p').textContent);
+            });
+
+            // Tools
+            append(document.querySelector('#tools .section-title').textContent, '## ');
+            document.querySelectorAll('#tools .tool-card').forEach(card => {
+                append(card.querySelector('h3').textContent, '### ');
+                append(card.querySelector('p').textContent);
+            });
+
+            // Workflow Steps
+            append(document.querySelector('#workflow .section-title').textContent, '## ');
+            document.querySelectorAll('#workflow .step').forEach((step, index) => {
+                const title = step.querySelector('h3').textContent;
+                const description = step.querySelector('p').textContent;
+                append(`${index + 1}. **${title}**\n   ${description}`, '', '\n');
+            });
+            markdownContent += '\n'; // Add extra space after the list
+
+            // Quote
+            const quote = document.querySelector('.quote-section blockquote');
+            if (quote) {
+                append(quote.textContent, '> ');
+            }
+
+            // Context Management
+            const contextSection = document.querySelector('#context');
+            if (contextSection) {
+                append(contextSection.querySelector('.section-title').textContent, '## ');
+                contextSection.querySelectorAll('.principle-card').forEach(card => {
+                    append(card.querySelector('h3').textContent, '### ');
+                    append(card.querySelector('p').textContent);
+                });
+            }
+            
+            // The Payoff
+            const payoffSection = document.querySelector('.section:last-of-type');
+            if(payoffSection && payoffSection.querySelector('h2').textContent.includes('Payoff')) {
+                append(payoffSection.querySelector('h2').textContent, '## ');
+                payoffSection.querySelectorAll('.principle-card').forEach(card => {
+                    append(card.querySelector('h3').textContent, '### ');
+                    append(card.querySelector('p').textContent);
+                });
+            }
+
+
+            return markdownContent;
+        }
+
+        document.getElementById('download-md-button').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent the link from navigating
+
+            const markdown = generateMarkdown();
+            const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a temporary link to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Think-First-Workflow-Guide.md';
+            document.body.appendChild(a);
+            a.click();
+
+            // Clean up by removing the link and revoking the URL
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
